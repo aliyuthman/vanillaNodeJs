@@ -1,0 +1,19 @@
+{
+  "name": "server.js",
+  "version": "1.0.0",
+  "description": "Backend with NodeJs App",
+  "main": "server.js",
+  "scripts": {
+    "start": "nodemon --env-file=.env server"
+  },
+  "keywords": [
+    "backend",
+    "node",
+    "javascript"
+  ],
+  "author": "Aliyu Usman",
+  "license": "ISC",
+  "devDependencies": {
+    "nodemon": "^3.0.2"
+  }
+}
