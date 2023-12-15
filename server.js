@@ -55,6 +55,29 @@ const server = http.createServer((req, res) => {
     res.statusCode = 200;
   }
 
+  if (req.method === "POST") {
+    let itemId = parsed.query.id;
+    let newItemName = parsed.query.newItemName;
+
+    if (!newItemName) {
+      console.log("POST: newItemName is invalid");
+      res.statusCode = 404;
+      res.end();
+      return;
+    }
+
+    let jsonIndex = itemJson.findIndex((item) => item.id === itemId);
+
+    if (jsonIndex >= 0) {
+      itemJson[jsonIndex].name = newItemName;
+      res.statusCode = 200;
+    } else {
+      res.statusCode = 404;
+    }
+
+    res.end();
+  }
+
   if (req.method === "OPTIONS") {
     res.statusCode = 200;
     res.end();

@@ -12,6 +12,7 @@ app.controller("mainController", function ($scope, $http, $dialogs) {
 
         var oldItemName = $scope.listing.find(i => i.id === itemId).name;
 
+
         dlg = $dialogs.create('/dialogs/prompt-name.html','promptNameCtrl', { itemName: oldItemName }, { key: false, back: 'static' });
         
         dlg.result.then(function(itemName) {
