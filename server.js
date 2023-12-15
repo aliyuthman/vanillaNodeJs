@@ -11,7 +11,7 @@ const server = http.createServer((req, res) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader(
     "Access-Control-Allow-Methods",
-    "GET, POST, PUT, UPDATE, OPTIONS"
+    "GET, POST, PUT, UPDATE, DELETE, OPTIONS"
   );
 
   console.log("req.method: = ", req.method);
@@ -57,24 +57,64 @@ const server = http.createServer((req, res) => {
 
   if (req.method === "POST") {
     let itemId = parsed.query.id;
-    let newItemName = parsed.query.newItemName;
 
-    if (!newItemName) {
-      console.log("POST: newItemName is invalid");
-      res.statusCode = 404;
-      res.end();
-      return;
+    switch (parsed.pathname) {
+      
+      case "/updateName":
+        let newItemName = parsed.query.newItemName;
+
+        if (!newItemName) {
+          console.log("POST: newItemName is invalid");
+          res.statusCode = 404;
+          res.end();
+          return;
+        }
+
+        var jsonIndex = itemJson.findIndex((item) => item.id === itemId);
+
+        if (jsonIndex >= 0) {
+          itemJson[jsonIndex].name = newItemName;
+          res.statusCode = 200;
+        } else {
+          res.statusCode = 404;
+        }
+
+        res.end();
+
+        break;
+
+      case "/updatePrice":
+        let newPrice = parsed.query.newPrice;
+
+        if (!newPrice) {
+          console.log("POST: newPrice is invalid");
+          res.statusCode = 404;
+          res.end();
+          return;
+        }
+
+
+        var jsonIndex = itemJson.findIndex((item) => item.id === itemId);
+
+        if (jsonIndex >= 0) {
+          itemJson[jsonIndex].price = newPrice;
+          res.statusCode = 200;
+        } else {
+          res.statusCode = 404;
+        }
+
+        res.end();
+        break;
+
+      default:
+        res.statusCode = 404;
+        res.end();
+        break;
     }
+  }
 
-    let jsonIndex = itemJson.findIndex((item) => item.id === itemId);
-
-    if (jsonIndex >= 0) {
-      itemJson[jsonIndex].name = newItemName;
-      res.statusCode = 200;
-    } else {
-      res.statusCode = 404;
-    }
-
+  if (req.method === "DELETE") {
+    res.statusCode = 501;
     res.end();
   }
 
