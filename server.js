@@ -59,7 +59,6 @@ const server = http.createServer((req, res) => {
     let itemId = parsed.query.id;
 
     switch (parsed.pathname) {
-      
       case "/updateName":
         let newItemName = parsed.query.newItemName;
 
@@ -93,7 +92,6 @@ const server = http.createServer((req, res) => {
           return;
         }
 
-
         var jsonIndex = itemJson.findIndex((item) => item.id === itemId);
 
         if (jsonIndex >= 0) {
@@ -114,7 +112,17 @@ const server = http.createServer((req, res) => {
   }
 
   if (req.method === "DELETE") {
-    res.statusCode = 501;
+    const itemId = parsed.query.id;
+
+    const jsonIndex = itemJson.findIndex((item) => item.id === itemId);
+
+    if (jsonIndex >= 0) {
+      itemJson.splice(jsonIndex, 1);
+      res.statusCode = 200;
+    } else {
+      res.statusCode = 404;
+    }
+
     res.end();
   }
 
