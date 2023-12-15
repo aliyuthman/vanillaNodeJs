@@ -1,6 +1,8 @@
 const http = require("http");
 const variables = require("./config/variables");
 
+const url = require("url");
+
 const itemJson = require("./items.json");
 
 const port = variables.port || "3001";
@@ -11,8 +13,13 @@ const server = http.createServer((req, res) => {
     "Access-Control-Allow-Methods",
     "GET, POST, PUT, UPDATE, OPTIONS"
   );
+
+  console.log("req.method: = ", req.method);
+  var parsed = url.parse(req.url, true);
+
+  console.log(parsed);
+
   if (req.method === "GET") {
-    console.log("HTTP METHOD: ", req.method);
     res.setHeader("Content-type", "application/json");
     // res.write("Hello Node");
     res.write(JSON.stringify(itemJson));
@@ -20,6 +27,37 @@ const server = http.createServer((req, res) => {
     res.end();
 
     console.log("GET: returned: \n" + itemJson);
+  }
+
+  if (req.method === "PUT") {
+    let newItemName = parsed.query.newItemName;
+    let newItemPrice = parsed.query.newItemPrice;
+
+    if (!newItemName) {
+      console.log("PUT: newItemName is invalid");
+      res.statusCode = 404;
+      res.end();
+      return;
+    }
+
+    if (!newItemPrice) {
+      console.log("PUT: newItemPrice is invalid");
+      res.statusCode = 404;
+      res.end();
+      return;
+    }
+
+    let newDate = new Date(Date.now());
+    let newID = newDate.toISOString();
+
+    itemJson.push({ id: newID, name: newItemName, price: newItemPrice });
+
+    res.statusCode = 200;
+  }
+
+  if (req.method === "OPTIONS") {
+    res.statusCode = 200;
+    res.end();
   }
 });
 
